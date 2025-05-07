@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form"
 
 import { z } from "zod"
 
+import { toast } from "sonner"
+
 const signInForm = z.object({
    email: z.string().email()
 })
@@ -18,9 +20,20 @@ export function SignIn() {
    const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignInForm>()
 
    async function handleSignIn(data: SignInForm) {
-      console.log(data)
+      try {
+         await new Promise(resolve => setTimeout(resolve, 2000))
 
-      await new Promise(resolve => setTimeout(resolve, 2000))
+         toast.success("Enviamos um link de autenticação para o seu e-mail.", {
+            action: {
+               label: "Reenviar",
+               onClick: () => handleSignIn(data)
+            }
+         })
+      }
+
+      catch {
+         toast.error("Credenciais inválidas.")
+      }
    }
 
    return (
